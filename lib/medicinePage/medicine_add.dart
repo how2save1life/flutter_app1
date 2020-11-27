@@ -1,15 +1,16 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:flutter_plugin_record/index.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutterapp1/model/medicine_list_model.dart';
-import 'package:flutterapp1/service/http_service.dart';
+import '../model/medicine_list_model.dart';
+import '../service/http_service.dart';
+import '../sound_widget.dart';
 
-var theUrl = "http://10.0.2.2:8080/";
+var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
 
 class MedicineAdd extends StatefulWidget {
   @override
@@ -22,6 +23,14 @@ class _MedicineAddState extends State<MedicineAdd> {
   String MedicineName1;
   String MedicineName2;
   var _imgPath;
+  FlutterPluginRecord recordPlugin = new FlutterPluginRecord();
+  String _soundPath = "";
+
+  @override
+  void initState() {
+    super.initState();
+    recordPlugin.init();
+  }
 
 /*图片控件*/
   Widget _ImageView(imgPath) {
@@ -70,6 +79,32 @@ class _MedicineAddState extends State<MedicineAdd> {
       });
     }
 
+    _saveSound(String medicineId, String file) async {
+      FormData data = FormData.fromMap({
+        "file": await MultipartFile.fromFile(file),
+        "medicineId": medicineId,
+      });
+      await requestPost(theUrl + 'Meds/MedSound', formData: data).then((value) {
+        print(value);
+      });
+    }
+
+    _startRecord() {
+      print("开始录制");
+    }
+
+    _stopRecord(String path, double audioTimeLength) {
+      print("结束束录制");
+      print("音频文件位置" + path);
+      print("音频录制时长" + audioTimeLength.toString());
+      _soundPath = path;
+    }
+
+    ///播放指定路径录音文件  url为iOS播放网络语音，file为播放本地语音文件
+    void _playByPath(String path, String type) {
+      recordPlugin.playByPath(path, type);
+    }
+
     void _saveMedicine() async {
       var infoForm = infoKey.currentState;
       if (infoForm.validate()) {
@@ -86,6 +121,7 @@ class _MedicineAddState extends State<MedicineAdd> {
           print(value);
           if (value.toString() != '') {
             _savePic(value.toString(), _imgPath);
+            _saveSound(value.toString(), _soundPath);
             Navigator.of(context).pop("");
           }
         });
@@ -131,34 +167,83 @@ class _MedicineAddState extends State<MedicineAdd> {
                 ),
 
                 _ImageView(_imgPath),
-                RaisedButton(
-                  onPressed: _takePhoto,
-                  child: Text("拍照"),
-                ),
-                RaisedButton(
-                  onPressed: _openGallery,
-                  child: Text("选择照片"),
-                ),
-                Row(children: [
-                  IconButton(
-                    icon: new Icon(Icons.volume_up),
-                    //tooltip: 'Increase volume by 10%',
-                    onPressed: () {
-                      // ...
-                    },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: RaisedButton(
+                        child: Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: "手机拍照 "),
+                            WidgetSpan(
+                              child: Icon(Icons.add_a_photo),
+                            ),
+                          ]),
+                        ),
+                        padding: EdgeInsets.all(15.0),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        onPressed: _takePhoto,
+                      ))
+                    ],
                   ),
-                  Expanded(
-                    child: Text(''), // 中间用Expanded控件
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: RaisedButton(
+                            onPressed: _openGallery,
+                            child: Text.rich(
+                              TextSpan(children: [
+                                TextSpan(text: "相册照片 "),
+                                WidgetSpan(
+                                  child: Icon(Icons.photo_library),
+                                ),
+                              ]),
+                            ),
+                            padding: EdgeInsets.all(15.0),
+                            color: Theme.of(context).primaryColor,
+                            textColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )),
+                //录音
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 20, 8.0, 8.0),
+                  child: new SoundWidget(
+                      startRecord: _startRecord, stopRecord: _stopRecord),
+                ),
+                //播放录音
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: RaisedButton(
+                        child: Text.rich(
+                          TextSpan(children: [
+                            TextSpan(text: "播放录音"),
+                            WidgetSpan(
+                              child: Icon(Icons.volume_up),
+                            ),
+                          ]),
+                        ),
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(15.0),
+                        onPressed: () {
+                          _playByPath(_soundPath, "file");
+                        },
+                      ))
+                    ],
                   ),
-                  IconButton(
-                    icon: new Icon(Icons.mic),
-                    //tooltip: 'Increase volume by 10%',
-                    onPressed: () {
-                      // ...
-                    },
-                  )
-                ]),
-                // 按钮
+                ),
+
+                // 上传按钮
                 Padding(
                   padding: const EdgeInsets.only(top: 28.0),
                   child: Row(
