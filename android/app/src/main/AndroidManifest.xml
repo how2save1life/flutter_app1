@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutterapp1">
+    package="com.example.flutterapp1"
+    >
 
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="flutterapp1"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

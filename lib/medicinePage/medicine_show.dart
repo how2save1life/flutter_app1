@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import '../model/medicine_list_model.dart';
 import 'medicine_add.dart';
 import 'medicine_info.dart';
-
-var theUrl = "http://10.0.2.2:8080/";
+import '../service/util.dart';
+// import '../common.dart';
+// var theUrl = "http://10.0.2.2:8080/";
+var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
 
 class Medicines extends StatefulWidget {
   @override
@@ -44,29 +46,24 @@ class _MedicinePageListState extends State<Medicines> {
   Widget _ListWidget(List newList, int index) {
     return GestureDetector(
       child: Container(
-        padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.black12),
-            )),
-        //水平方向布局
-        child: Row(
-          children: <Widget>[
-            //返回商品图片
-            _medicineImage(newList, index),
-            SizedBox(
-              width: 10,
-            ),
-            //右侧使用垂直布局
-            Column(
-              children: <Widget>[
-                _medicineName(newList, index),
-              ],
-            ),
-          ],
-        ),
-      ),
+          padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.black12),
+              )),
+          //水平方向布局
+          child: Row(
+            children: <Widget>[
+              //返回商品图片
+              _medicineImage(newList, index),
+              SizedBox(
+                width: 10,
+              ),
+              //右侧使用垂直布局
+              _medicineName(newList, index)
+            ],
+          )),
       onTap: () {
         Navigator.push(
             context,
@@ -82,53 +79,48 @@ class _MedicinePageListState extends State<Medicines> {
 
   //名称
   Widget _medicineName(List newList, int index) {
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: Row(
-        children: [
-          Text(
-            newList[index].medicineName,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 18),
-          ),
-          Text(
-            newList[index].medicineName1 != ''
-                ? ('/' + newList[index].medicineName1)
-                : "",
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 18),
-          ),
-          Text(
-            newList[index].medicineName2 != ''
-                ? ('/' + newList[index].medicineName2)
-                : "",
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
-      ),
-    );
+    return Expanded(
+        //padding: EdgeInsets.all(5.0),
+        // width:double.infinity,
+        child: Text(
+      newList[index].medicineName +
+          (newList[index].medicineName1 != ''
+              ? ('/' + newList[index].medicineName1)
+              : "") +
+          (newList[index].medicineName2 != ''
+              ? ('/' + newList[index].medicineName2)
+              : ""),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(fontSize: 18),
+    ));
   }
 
   //图片
   Widget _medicineImage(List newList, int index) {
-    return Container(
-      width: 150,
-      height: 150,
-      child: Image.network(
-        theUrl + newList[index].medicinePic + "/1.jpg",
-        fit: BoxFit.fitWidth,
-      ),
-    );
+    if (newList[index].medicinePic != "") {
+      return Container(
+        width: 150,
+        height: 150,
+        child: Image.network(
+          theUrl +
+              newList[index].medicinePic +
+              "/1.jpg?" +
+              randomSuffix(),
+          fit: BoxFit.fitWidth,
+        ),
+      );
+    } else
+      return Container(
+        width: 150,
+        height: 150,
+      );
   }
 
   Widget _buildList() {
     if (medicineList.data.length > 0) {
       return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
         //滚动控制器
         controller: scrollController,
         //列表长度

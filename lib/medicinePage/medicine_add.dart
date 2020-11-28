@@ -19,9 +19,13 @@ class MedicineAdd extends StatefulWidget {
 
 class _MedicineAddState extends State<MedicineAdd> {
   final myController = TextEditingController();
-  String MedicineName;
-  String MedicineName1;
-  String MedicineName2;
+
+  // String MedicineName;
+  // String MedicineName1;
+  // String MedicineName2;
+  var MedicineName = new TextEditingController();
+  var MedicineName1 = new TextEditingController();
+  var MedicineName2 = new TextEditingController();
   var _imgPath;
   FlutterPluginRecord recordPlugin = new FlutterPluginRecord();
   String _soundPath = "";
@@ -97,7 +101,10 @@ class _MedicineAddState extends State<MedicineAdd> {
       print("结束束录制");
       print("音频文件位置" + path);
       print("音频录制时长" + audioTimeLength.toString());
-      _soundPath = path;
+      setState(() {
+        _soundPath = path;
+      });
+
     }
 
     ///播放指定路径录音文件  url为iOS播放网络语音，file为播放本地语音文件
@@ -113,8 +120,8 @@ class _MedicineAddState extends State<MedicineAdd> {
         print(MedicineName);
         print(MedicineName1);
         print(MedicineName2);
-        var data = MedicineModel(
-            "", MedicineName, MedicineName1, MedicineName2, "", "");
+        var data = MedicineModel("", MedicineName.text, MedicineName1.text,
+            MedicineName2.text, "", "");
         await requestPost(theUrl + 'Meds/SaveMedicine', formData: data.toJson())
             .then((value) {
           print("succ");
@@ -142,8 +149,9 @@ class _MedicineAddState extends State<MedicineAdd> {
                   decoration: new InputDecoration(
                     labelText: '药名',
                   ),
+                  controller: MedicineName,
                   onSaved: (value) {
-                    MedicineName = value;
+                    MedicineName.text = value;
                   },
                   validator: (val) {
                     return val.length <= 0 ? "请输入药名" : null;
@@ -153,16 +161,18 @@ class _MedicineAddState extends State<MedicineAdd> {
                   decoration: new InputDecoration(
                     labelText: '药名2',
                   ),
+                  controller: MedicineName1,
                   onSaved: (value) {
-                    MedicineName1 = value;
+                    MedicineName1.text = value;
                   },
                 ),
                 TextFormField(
                   decoration: new InputDecoration(
                     labelText: '药名3',
                   ),
+                  controller: MedicineName2,
                   onSaved: (value) {
-                    MedicineName2 = value;
+                    MedicineName2.text = value;
                   },
                 ),
 
@@ -218,30 +228,31 @@ class _MedicineAddState extends State<MedicineAdd> {
                       startRecord: _startRecord, stopRecord: _stopRecord),
                 ),
                 //播放录音
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: RaisedButton(
-                        child: Text.rich(
-                          TextSpan(children: [
-                            TextSpan(text: "播放录音"),
-                            WidgetSpan(
-                              child: Icon(Icons.volume_up),
-                            ),
-                          ]),
-                        ),
-                        color: Theme.of(context).primaryColor,
-                        textColor: Colors.white,
-                        padding: EdgeInsets.all(15.0),
-                        onPressed: () {
-                          _playByPath(_soundPath, "file");
-                        },
-                      ))
-                    ],
+                if (_soundPath != "")
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: RaisedButton(
+                          child: Text.rich(
+                            TextSpan(children: [
+                              TextSpan(text: "播放录音"),
+                              WidgetSpan(
+                                child: Icon(Icons.volume_up),
+                              ),
+                            ]),
+                          ),
+                          color: Theme.of(context).primaryColor,
+                          textColor: Colors.white,
+                          padding: EdgeInsets.all(15.0),
+                          onPressed: () {
+                            _playByPath(_soundPath, "file");
+                          },
+                        ))
+                      ],
+                    ),
                   ),
-                ),
 
                 // 上传按钮
                 Padding(
