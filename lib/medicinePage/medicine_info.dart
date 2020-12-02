@@ -10,7 +10,7 @@ import '../service/util.dart';
 // import '../common.dart';
 // var theUrl = "http://10.0.2.2:8080/";
 var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
-
+///个人信息 可以修改
 class MedicineInfo extends StatefulWidget {
   final medId;
   final medPic;
@@ -292,7 +292,7 @@ class _MedicineInfoState extends State<MedicineInfo> {
                     Expanded(
                       child: RaisedButton(
                         padding: EdgeInsets.all(15.0),
-                        child: Text("上传"),
+                        child: Text("更新"),
                         color: Theme.of(context).primaryColor,
                         textColor: Colors.white,
                         onPressed: () {

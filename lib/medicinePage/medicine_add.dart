@@ -1,15 +1,13 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter_plugin_record/index.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/medicine_list_model.dart';
 import '../service/http_service.dart';
 import '../sound_widget.dart';
-
+///新增
 var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
 
 class MedicineAdd extends StatefulWidget {
@@ -20,9 +18,6 @@ class MedicineAdd extends StatefulWidget {
 class _MedicineAddState extends State<MedicineAdd> {
   final myController = TextEditingController();
 
-  // String MedicineName;
-  // String MedicineName1;
-  // String MedicineName2;
   var MedicineName = new TextEditingController();
   var MedicineName1 = new TextEditingController();
   var MedicineName2 = new TextEditingController();
@@ -52,7 +47,6 @@ class _MedicineAddState extends State<MedicineAdd> {
   /*拍照*/
   _takePhoto() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-
     setState(() {
       _imgPath = image;
     });

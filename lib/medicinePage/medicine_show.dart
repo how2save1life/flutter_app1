@@ -8,7 +8,7 @@ import '../service/util.dart';
 // import '../common.dart';
 // var theUrl = "http://10.0.2.2:8080/";
 var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
-
+///大列表
 class Medicines extends StatefulWidget {
   @override
   createState() => _MedicinePageListState();

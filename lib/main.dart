@@ -1,15 +1,21 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'medicinePage/medicine_show.dart';
 import 'package:flutter/material.dart';
-import 'sound_test.dart';
-import 'test.dart';
-import 'common.dart';
+import 'patientPage/patient_show.dart';
+
 void main() => runApp(MyApp());
+
 // // var theUrl = "http://10.0.2.2:8080/";
 // var theUrl = Global().BASE_url;//"http://10.0.2.2:8080/";
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [const Locale('zh', 'CH')],
       title: '抓药',
       home: new HomePage(),
     );
@@ -31,28 +37,45 @@ class HomePage extends StatelessWidget {
               textColor: Colors.white,
               child: new Text('药品信息'),
               onPressed: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => new Medicines()));
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new Medicines()));
               },
             ),
             new MaterialButton(
               color: Colors.blue,
               textColor: Colors.white,
-              child: new Text('test'),
+              child: new Text('病人信息'),
               onPressed: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => new ImagePickerWidget()));
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new Patients()));
               },
             ),
-            new MaterialButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              child: new Text('test'),
-              onPressed: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => new soundPage()));
-              },
-            ),
+            // new MaterialButton(
+            //   color: Colors.blue,
+            //   textColor: Colors.white,
+            //   child: new Text('test'),
+            //   onPressed: () {
+            //     Navigator.push(
+            //         context,
+            //         new MaterialPageRoute(
+            //             builder: (context) => new ImagePickerWidget()));
+            //   },
+            // ),
+            // new MaterialButton(
+            //   color: Colors.blue,
+            //   textColor: Colors.white,
+            //   child: new Text('test'),
+            //   onPressed: () {
+            //     Navigator.push(
+            //         context,
+            //         new MaterialPageRoute(
+            //             builder: (context) => new soundPage()));
+            //   },
+            // ),
           ],
         ),
       ),

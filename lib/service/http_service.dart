@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'dart:async';
 class Global{
-  String BASE_url="http://192.168.1.104:8080/";
+  // String BASE_url="http://192.168.1.105:8080/";
+  String BASE_url="http://10.206.128.44:8080/";
 }
 //Dio请求方法封装
 Future request(url, {formData}) async {
