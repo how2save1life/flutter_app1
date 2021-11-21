@@ -10,7 +10,7 @@ import '../service/util.dart';
 // import '../common.dart';
 // var theUrl = "http://10.0.2.2:8080/";
 var theUrl = Global().BASE_url; //"http://10.0.2.2:8080/";
-///个人信息 可以修改
+///药品具体信息 可以修改
 class MedicineInfo extends StatefulWidget {
   final medId;
   final medPic;

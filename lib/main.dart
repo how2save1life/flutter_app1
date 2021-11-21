@@ -1,4 +1,5 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'prescriptionPage/prescription_add.dart';
 import 'medicinePage/medicine_show.dart';
 import 'package:flutter/material.dart';
 import 'patientPage/patient_show.dart';
@@ -54,6 +55,18 @@ class HomePage extends StatelessWidget {
                         builder: (context) => new Patients()));
               },
             ),
+            new MaterialButton(
+              color: Colors.blue,
+              textColor: Colors.white,
+              child: new Text('处方新增'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new PrescriptionAdd()));
+              },
+            ),
+
             // new MaterialButton(
             //   color: Colors.blue,
             //   textColor: Colors.white,
